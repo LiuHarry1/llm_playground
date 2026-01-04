@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局样式 */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0d0d14;
+  color: #e1e9f8;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(122, 162, 247, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(122, 162, 247, 0.5);
+}
+
+/* 选中文本样式 */
+::selection {
+  background: rgba(122, 162, 247, 0.3);
+  color: #fff;
+}
+
+/* 代码块样式 */
+pre {
+  overflow-x: auto;
+}
+
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* 输入框placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(154, 181, 230, 0.4);
+}
+
+/* 焦点样式 */
+:focus-visible {
+  outline: 2px solid rgba(122, 162, 247, 0.5);
+  outline-offset: 2px;
+}
+
+/* 禁用状态 */
+button:disabled,
+input:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 音频播放器样式 */
+audio {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+}
+
+audio::-webkit-media-controls-panel {
+  background: rgba(26, 27, 38, 0.8);
+}
+
+/* 视频播放器样式 */
+video {
+  border-radius: 8px;
+}
+
+/* 动画 */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(122, 162, 247, 0.1) 0%,
+    rgba(187, 154, 247, 0.2) 50%,
+    rgba(122, 162, 247, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Markdown 样式优化 */
+.prose {
+  --tw-prose-body: #c3d3f1;
+  --tw-prose-headings: #f0f4fc;
+  --tw-prose-links: #7aa2f7;
+  --tw-prose-bold: #f0f4fc;
+  --tw-prose-code: #7dcfff;
+  --tw-prose-pre-bg: #16161e;
+  --tw-prose-quotes: #9ab5e6;
+}
+
+.prose a {
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.prose a:hover {
+  color: #bb9af7;
+}
+
+.prose pre {
+  border: 1px solid rgba(122, 162, 247, 0.2);
+}
+
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+/* 表格样式 */
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid rgba(122, 162, 247, 0.2);
+  padding: 0.5rem 1rem;
+}
+
+.prose th {
+  background: rgba(122, 162, 247, 0.1);
+}
+
+/* 列表样式 */
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+/* 引用块样式 */
+.prose blockquote {
+  border-left: 4px solid #7aa2f7;
+  background: rgba(122, 162, 247, 0.1);
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Range input 样式 */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 4px;
+  background: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #7aa2f7;
+  margin-top: -4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: transparent;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #7aa2f7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+

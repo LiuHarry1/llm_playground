@@ -38,6 +38,23 @@ class OpenRouterService:
         
         return msg
     
+    def _extract_images_from_content(self, content) -> List[str]:
+        """从消息内容中提取图片URL"""
+        images = []
+        if isinstance(content, list):
+            for item in content:
+                if isinstance(item, dict):
+                    # 检查各种可能的图片格式
+                    if item.get("type") == "image_url":
+                        url = item.get("image_url", {}).get("url") or item.get("url")
+                        if url:
+                            images.append(url)
+                    elif item.get("type") == "image":
+                        url = item.get("url") or item.get("image_url", {}).get("url")
+                        if url:
+                            images.append(url)
+        return images
+
     def chat_stream(
         self,
         model: str,
@@ -94,7 +111,20 @@ class OpenRouterService:
                     
                     # 文本内容
                     if delta and delta.content:
-                        yield {"type": "text", "content": delta.content}
+                        # 检查content是否包含图片
+                        if isinstance(delta.content, list):
+                            for item in delta.content:
+                                if isinstance(item, dict):
+                                    if item.get("type") == "text":
+                                        yield {"type": "text", "content": item.get("text", "")}
+                                    elif item.get("type") in ["image_url", "image"]:
+                                        url = item.get("url") or item.get("image_url", {}).get("url")
+                                        if url:
+                                            yield {"type": "image", "url": url}
+                                elif isinstance(item, str):
+                                    yield {"type": "text", "content": item}
+                        else:
+                            yield {"type": "text", "content": delta.content}
                     
                     # 检查是否有图片（通过model_extra访问额外字段）
                     if hasattr(chunk, "model_extra") and chunk.model_extra:
@@ -110,6 +140,15 @@ class OpenRouterService:
                     if hasattr(choice, "model_extra") and choice.model_extra:
                         if "images" in choice.model_extra:
                             for img in choice.model_extra["images"]:
+                                if isinstance(img, dict):
+                                    url = img.get("image_url", {}).get("url") or img.get("url")
+                                    if url:
+                                        yield {"type": "image", "url": url}
+                    
+                    # 检查delta级别的额外数据
+                    if delta and hasattr(delta, "model_extra") and delta.model_extra:
+                        if "images" in delta.model_extra:
+                            for img in delta.model_extra["images"]:
                                 if isinstance(img, dict):
                                     url = img.get("image_url", {}).get("url") or img.get("url")
                                     if url:
@@ -160,19 +199,60 @@ class OpenRouterService:
                 "audio": [],
             }
             
-            # 提取文本
+            # 提取文本和图片
             if response.choices and len(response.choices) > 0:
                 message = response.choices[0].message
-                if message.content:
-                    result["text"] = message.content
+                content = message.content
                 
-                # 检查图片
+                # 处理不同格式的content
+                if isinstance(content, str):
+                    result["text"] = content
+                elif isinstance(content, list):
+                    # 多模态响应
+                    text_parts = []
+                    for item in content:
+                        if isinstance(item, dict):
+                            if item.get("type") == "text":
+                                text_parts.append(item.get("text", ""))
+                            elif item.get("type") in ["image_url", "image"]:
+                                url = item.get("url") or item.get("image_url", {}).get("url")
+                                if url:
+                                    result["images"].append(url)
+                        elif isinstance(item, str):
+                            text_parts.append(item)
+                    result["text"] = "".join(text_parts)
+                
+                # 检查message级别的额外数据
+                if hasattr(message, "model_extra") and message.model_extra:
+                    if "images" in message.model_extra:
+                        for img in message.model_extra["images"]:
+                            if isinstance(img, dict):
+                                url = img.get("image_url", {}).get("url") or img.get("url")
+                                if url:
+                                    result["images"].append(url)
+                            elif isinstance(img, str):
+                                result["images"].append(img)
+                
+                # 检查response级别的图片
                 if hasattr(response, "images") and response.images:
                     for img in response.images:
                         if isinstance(img, dict):
                             url = img.get("image_url", {}).get("url") or img.get("url")
                             if url:
                                 result["images"].append(url)
+                        elif isinstance(img, str):
+                            result["images"].append(img)
+                
+                # 检查response级别的额外数据
+                if hasattr(response, "model_extra") and response.model_extra:
+                    if "images" in response.model_extra:
+                        for img in response.model_extra["images"]:
+                            if isinstance(img, dict):
+                                url = img.get("image_url", {}).get("url") or img.get("url")
+                                if url:
+                                    result["images"].append(url)
+                            elif isinstance(img, str):
+                                result["images"].append(img)
             
             return result
             
