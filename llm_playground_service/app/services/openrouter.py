@@ -12,9 +12,16 @@ class OpenRouterService:
     """OpenRouter API 服务封装，使用 OpenAI SDK"""
     
     def __init__(self):
+        # OpenRouter API需要HTTP-Referer和X-Title headers
+        # 注意：OpenRouter使用HTTP-Referer（带HTTP-前缀）和X-Title
+        default_headers = {
+            "HTTP-Referer": settings.HTTP_REFERER,
+            "X-Title": settings.X_TITLE,
+        }
         self.client = OpenAI(
             base_url=settings.OPENROUTER_BASE_URL,
             api_key=settings.OPENROUTER_API_KEY,
+            default_headers=default_headers,
         )
     
     def _convert_message(self, message: Message) -> Dict[str, Any]:
@@ -55,6 +62,25 @@ class OpenRouterService:
                             images.append(url)
         return images
 
+    def _is_image_generation_model(self, model: str, modalities: Optional[List[str]] = None) -> bool:
+        """判断是否是图片生成模型"""
+        # 根据模型名称判断
+        image_gen_models = [
+            "gpt-5-image", "gpt-4o-image", "dall-e", 
+            "stable-diffusion", "midjourney", "imagen",
+            "nano-banana", "gemini-2.5-flash-image", "gemini-3-pro-image"
+        ]
+        model_lower = model.lower()
+        for img_model in image_gen_models:
+            if img_model in model_lower:
+                return True
+        
+        # 根据输出模态判断
+        if modalities and "image" in modalities:
+            return True
+        
+        return False
+
     def chat_stream(
         self,
         model: str,
@@ -84,17 +110,23 @@ class OpenRouterService:
         """
         converted_messages = [self._convert_message(msg) for msg in messages]
         
+        # 判断是否是图片生成模型
+        is_image_gen = self._is_image_generation_model(model, modalities)
+        
         # 构建请求参数
         request_params = {
             "model": model,
             "messages": converted_messages,
             "stream": True,
-            "temperature": temperature,
-            "max_tokens": max_tokens,
-            "top_p": top_p,
-            "frequency_penalty": frequency_penalty,
-            "presence_penalty": presence_penalty,
         }
+        
+        # 对于非图片生成模型，添加文本生成相关参数
+        if not is_image_gen:
+            request_params["temperature"] = temperature
+            request_params["max_tokens"] = max_tokens
+            request_params["top_p"] = top_p
+            request_params["frequency_penalty"] = frequency_penalty
+            request_params["presence_penalty"] = presence_penalty
         
         # 添加多模态输出配置
         if modalities:
@@ -180,12 +212,18 @@ class OpenRouterService:
         """
         converted_messages = [self._convert_message(msg) for msg in messages]
         
+        # 判断是否是图片生成模型
+        is_image_gen = self._is_image_generation_model(model, modalities)
+        
         request_params = {
             "model": model,
             "messages": converted_messages,
-            "temperature": temperature,
-            "max_tokens": max_tokens,
         }
+        
+        # 对于非图片生成模型，添加文本生成相关参数
+        if not is_image_gen:
+            request_params["temperature"] = temperature
+            request_params["max_tokens"] = max_tokens
         
         if modalities:
             request_params["extra_body"] = {"modalities": modalities}
@@ -276,6 +314,10 @@ class OpenRouterService:
                 models.append(model_info)
             return models
         except Exception as e:
+            # 记录错误以便调试
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to fetch models from OpenRouter: {e}")
             return []
 
 

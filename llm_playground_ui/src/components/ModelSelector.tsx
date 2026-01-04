@@ -9,7 +9,8 @@ import {
   Check,
   Sparkles,
   Search,
-  Loader2
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
 import type { ModelInfo, CategorizedModels, ModelCapabilities } from '../types';
 import { getModelCapabilities } from '../types';
@@ -61,14 +62,17 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('text');
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadModels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadModels = async () => {
     try {
       setIsLoading(true);
+      setError(null);
       const data = await fetchModels();
       setModels(data.categorized);
       setAllModels(data.all);
@@ -80,6 +84,7 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
       }
     } catch (error) {
       console.error('加载模型失败:', error);
+      setError('加载模型列表失败，请刷新页面重试');
     } finally {
       setIsLoading(false);
     }
@@ -122,22 +127,23 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
       {/* 选择按钮 */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 
-                   bg-surface-800/50 border border-surface-700/50 rounded-xl
+        className={`w-full flex items-center justify-between gap-3 px-4 py-3 
+                   bg-surface-800/50 border rounded-xl
                    hover:border-accent-blue/50 transition-all duration-300
-                   focus:outline-none focus:ring-2 focus:ring-accent-blue/30"
+                   focus:outline-none focus:ring-2 focus:ring-accent-blue/30
+                   ${error ? 'border-red-500/50' : 'border-surface-700/50'}`}
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-blue to-accent-purple 
-                          flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center
+                          ${error ? 'bg-red-500/20' : 'bg-gradient-to-br from-accent-blue to-accent-purple'}`}>
+            <Sparkles className={`w-4 h-4 ${error ? 'text-red-400' : 'text-white'}`} />
           </div>
           <div className="text-left min-w-0">
-            <div className="text-sm font-medium text-surface-100 truncate">
-              {isLoading ? '加载中...' : (selectedModel?.name || '选择模型')}
+            <div className={`text-sm font-medium truncate ${error ? 'text-red-400' : 'text-surface-100'}`}>
+              {isLoading ? '加载中...' : error ? '加载失败' : (selectedModel?.name || '选择模型')}
             </div>
-            <div className="text-xs text-surface-400 truncate max-w-[180px]">
-              {selectedModel?.description?.slice(0, 40) || '点击选择一个AI模型'}
+            <div className={`text-xs truncate max-w-[180px] ${error ? 'text-red-400/80' : 'text-surface-400'}`}>
+              {error || selectedModel?.description?.slice(0, 40) || '点击选择一个AI模型'}
               {selectedModel?.description && selectedModel.description.length > 40 ? '...' : ''}
             </div>
           </div>
@@ -205,7 +211,19 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
 
             {/* 模型列表 */}
             <div className="max-h-72 overflow-y-auto p-2">
-              {isLoading ? (
+              {error ? (
+                <div className="flex flex-col items-center justify-center py-8 text-red-400">
+                  <AlertCircle className="w-8 h-8 mb-2" />
+                  <div className="text-sm mb-3">{error}</div>
+                  <button
+                    onClick={loadModels}
+                    className="px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg
+                             hover:bg-red-500/30 transition-colors text-sm"
+                  >
+                    重试
+                  </button>
+                </div>
+              ) : isLoading ? (
                 <div className="flex items-center justify-center py-8 text-surface-400">
                   <Loader2 className="w-5 h-5 animate-spin mr-2" />
                   加载模型列表...

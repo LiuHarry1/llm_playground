@@ -113,7 +113,12 @@ export default function ChatInput({
 
   // 处理键盘事件
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    if (e.key === 'Enter') {
+      // Shift + Enter: 换行
+      if (e.shiftKey) {
+        return; // 允许默认行为（换行）
+      }
+      // Ctrl/Cmd + Enter 或单独 Enter: 发送消息
       e.preventDefault();
       handleSend();
     }
@@ -195,7 +200,7 @@ export default function ChatInput({
               adjustTextareaHeight();
             }}
             onKeyDown={handleKeyDown}
-            placeholder="输入消息... (Ctrl/Cmd + Enter 发送)"
+            placeholder="输入消息... (Enter 发送, Shift + Enter 换行)"
             disabled={disabled || isLoading}
             className="flex-1 bg-transparent text-surface-100 placeholder-surface-500
                       resize-none outline-none min-h-[44px] max-h-[200px]

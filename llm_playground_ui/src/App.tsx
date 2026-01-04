@@ -44,6 +44,7 @@ export default function App() {
 
   // 处理模型变更
   const handleModelChange = useCallback((model: ModelInfo, caps: ModelCapabilities) => {
+    console.log('handleModelChange called with model:', model.id, model.name);
     setSelectedModel(model);
     setCapabilities(caps);
   }, []);
@@ -92,6 +93,7 @@ export default function App() {
 
   // 发送消息
   const handleSend = useCallback(async (text: string, mediaFiles: MediaFile[]) => {
+    console.log('handleSend called with text:', text, 'selectedModel:', selectedModel?.id);
     if (!selectedModel) {
       console.error('No model selected');
       return;
@@ -328,7 +330,7 @@ export default function App() {
           />
           <div className="mt-3 text-center text-xs text-surface-500">
             {selectedModel 
-              ? '支持拖拽上传文件 • Ctrl/Cmd + Enter 发送'
+              ? '支持拖拽上传文件 • Enter 发送, Shift + Enter 换行'
               : '请先选择一个模型'
             }
           </div>
