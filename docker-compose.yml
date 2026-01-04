@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # 后端服务
+  llm-playground-service:
+    build:
+      context: ./llm_playground_service
+      dockerfile: Dockerfile
+    container_name: llm-playground-service
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./llm_playground_service/.env
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    restart: unless-stopped
+    networks:
+      - llm-playground-network
+
+  # 前端服务
+  llm-playground-ui:
+    build:
+      context: ./llm_playground_ui
+      dockerfile: Dockerfile
+      args:
+        # 如果使用 docker-compose，后端服务名可以作为主机名
+        VITE_API_BASE_URL: http://llm-playground-service:8000/api
+        # 或者使用相对路径（如果通过反向代理）
+        # VITE_API_BASE_URL: /api
+    container_name: llm-playground-ui
+    ports:
+      - "5173:80"
+    depends_on:
+      - llm-playground-service
+    restart: unless-stopped
+    networks:
+      - llm-playground-network
+
+networks:
+  llm-playground-network:
+    driver: bridge
+

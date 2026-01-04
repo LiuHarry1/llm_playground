@@ -6,7 +6,9 @@ import type {
   ModelInfo
 } from '../types';
 
-const API_BASE = '/api';
+// 支持环境变量配置 API 地址，用于生产环境部署
+// 开发环境使用 vite proxy，生产环境使用环境变量
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 /**
  * 获取模型列表（分类后的）
