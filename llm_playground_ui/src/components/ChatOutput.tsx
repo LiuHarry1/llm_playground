@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { User, Bot, Copy, Check, Loader2 } from 'lucide-react';
-import type { ChatHistoryItem, MediaFile } from '../types';
+import type { ChatHistoryItem } from '../types';
 import { useState } from 'react';
-import MediaPreview, { GeneratedImage, AudioPlayer } from './MediaPreview';
+import MediaPreview, { GeneratedImage } from './MediaPreview';
 
 interface ChatOutputProps {
   history: ChatHistoryItem[];

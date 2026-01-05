@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { Settings, Trash2, Zap } from 'lucide-react';
 import ModelSelector from './components/ModelSelector';
 import SystemPrompt from './components/SystemPrompt';
@@ -17,7 +17,6 @@ import type {
   ContentItem,
   ModelInfo
 } from './types';
-import { getModelCapabilities } from './types';
 
 const DEFAULT_HYPER_PARAMS: HyperParamsType = {
   temperature: 0.7,

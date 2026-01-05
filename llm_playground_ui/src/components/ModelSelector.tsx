@@ -113,15 +113,6 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
 
   const filteredModels = getFilteredModels();
 
-  // 格式化价格显示
-  const formatPrice = (price: string | undefined): string => {
-    if (!price) return '';
-    const num = parseFloat(price);
-    if (num === 0) return '免费';
-    if (num < 0.000001) return `$${(num * 1000000).toFixed(2)}/M`;
-    return `$${num}/1K`;
-  };
-
   return (
     <div className="relative">
       {/* 选择按钮 */}
