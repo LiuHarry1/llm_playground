@@ -90,7 +90,7 @@ export default function HyperParams({ params, onChange }: HyperParamsProps) {
     >
       <div className="flex items-center gap-2 text-surface-300 mb-4">
         <Settings className="w-4 h-4" />
-        <span className="text-sm font-medium">超参数设置</span>
+        <span className="text-sm font-medium">Hyper Parameters</span>
       </div>
 
       <div className="space-y-5">
@@ -100,7 +100,7 @@ export default function HyperParams({ params, onChange }: HyperParamsProps) {
           min={0}
           max={2}
           step={0.1}
-          tooltip="控制输出的随机性，值越高越随机"
+          tooltip="Controls the randomness of output, higher values are more random"
           onChange={(v) => updateParam('temperature', v)}
         />
 
@@ -110,7 +110,7 @@ export default function HyperParams({ params, onChange }: HyperParamsProps) {
           min={256}
           max={16384}
           step={256}
-          tooltip="生成内容的最大长度"
+          tooltip="Maximum length of generated content"
           onChange={(v) => updateParam('max_tokens', v)}
           formatValue={(v) => v.toLocaleString()}
         />
@@ -121,7 +121,7 @@ export default function HyperParams({ params, onChange }: HyperParamsProps) {
           min={0}
           max={1}
           step={0.05}
-          tooltip="核采样参数，控制词汇选择范围"
+          tooltip="Nucleus sampling parameter, controls vocabulary selection range"
           onChange={(v) => updateParam('top_p', v)}
         />
 
@@ -131,7 +131,7 @@ export default function HyperParams({ params, onChange }: HyperParamsProps) {
           min={0}
           max={2}
           step={0.1}
-          tooltip="降低重复词汇出现的频率"
+          tooltip="Reduces the frequency of repeated words"
           onChange={(v) => updateParam('frequency_penalty', v)}
         />
 
@@ -141,7 +141,7 @@ export default function HyperParams({ params, onChange }: HyperParamsProps) {
           min={0}
           max={2}
           step={0.1}
-          tooltip="鼓励模型讨论新话题"
+          tooltip="Encourages the model to discuss new topics"
           onChange={(v) => updateParam('presence_penalty', v)}
         />
       </div>

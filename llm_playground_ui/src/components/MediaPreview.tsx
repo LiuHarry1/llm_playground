@@ -152,7 +152,7 @@ export function GeneratedImage({ url, index = 0 }: GeneratedImageProps) {
                     transition-colors duration-200"
         >
           <Download className="w-4 h-4" />
-          下载图片
+          Download Image
         </button>
       </div>
     </motion.div>
@@ -177,7 +177,7 @@ export function AudioPlayer({ url }: AudioPlayerProps) {
                        flex items-center justify-center">
           <Music className="w-5 h-5 text-accent-green" />
         </div>
-        <span className="text-sm font-medium text-surface-200">生成的音频</span>
+        <span className="text-sm font-medium text-surface-200">Generated Audio</span>
       </div>
       <audio 
         controls 

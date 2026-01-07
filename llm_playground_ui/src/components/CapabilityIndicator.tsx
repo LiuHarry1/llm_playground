@@ -17,22 +17,22 @@ interface CapabilityIndicatorProps {
 const INPUT_ICONS: Record<InputType, { icon: React.ReactNode; label: string; color: string }> = {
   text: { 
     icon: <Type className="w-4 h-4" />, 
-    label: '文本', 
+    label: 'Text', 
     color: 'text-accent-blue bg-accent-blue/10 border-accent-blue/30' 
   },
   image: { 
     icon: <Image className="w-4 h-4" />, 
-    label: '图片', 
+    label: 'Image', 
     color: 'text-accent-orange bg-accent-orange/10 border-accent-orange/30' 
   },
   audio: { 
     icon: <Mic className="w-4 h-4" />, 
-    label: '音频', 
+    label: 'Audio', 
     color: 'text-accent-green bg-accent-green/10 border-accent-green/30' 
   },
   video: { 
     icon: <Video className="w-4 h-4" />, 
-    label: '视频', 
+    label: 'Video', 
     color: 'text-accent-purple bg-accent-purple/10 border-accent-purple/30' 
   },
 };
@@ -40,17 +40,17 @@ const INPUT_ICONS: Record<InputType, { icon: React.ReactNode; label: string; col
 const OUTPUT_ICONS: Record<OutputType, { icon: React.ReactNode; label: string; color: string }> = {
   text: { 
     icon: <Type className="w-4 h-4" />, 
-    label: '文本', 
+    label: 'Text', 
     color: 'text-accent-cyan bg-accent-cyan/10 border-accent-cyan/30' 
   },
   image: { 
     icon: <Image className="w-4 h-4" />, 
-    label: '图片', 
+    label: 'Image', 
     color: 'text-accent-yellow bg-accent-yellow/10 border-accent-yellow/30' 
   },
   audio: { 
     icon: <Mic className="w-4 h-4" />, 
-    label: '音频', 
+    label: 'Audio', 
     color: 'text-accent-teal bg-accent-teal/10 border-accent-teal/30' 
   },
 };
@@ -65,14 +65,14 @@ export default function CapabilityIndicator({ capabilities, modelName }: Capabil
       <div className="flex items-center gap-2 mb-3">
         <Sparkles className="w-4 h-4 text-accent-yellow" />
         <span className="text-sm font-medium text-surface-200">
-          {modelName ? `${modelName} 能力` : '模型能力'}
+          {modelName ? `${modelName} Capabilities` : 'Model Capabilities'}
         </span>
       </div>
 
       <div className="flex items-center gap-4">
         {/* 输入能力 */}
         <div className="flex-1">
-          <div className="text-xs text-surface-500 mb-2">支持输入</div>
+          <div className="text-xs text-surface-500 mb-2">Supports Input</div>
           <div className="flex flex-wrap gap-2">
             {capabilities.inputTypes.map((type) => {
               const info = INPUT_ICONS[type];
@@ -99,7 +99,7 @@ export default function CapabilityIndicator({ capabilities, modelName }: Capabil
 
         {/* 输出能力 */}
         <div className="flex-1">
-          <div className="text-xs text-surface-500 mb-2">支持输出</div>
+          <div className="text-xs text-surface-500 mb-2">Supports Output</div>
           <div className="flex flex-wrap gap-2">
             {capabilities.outputTypes.map((type) => {
               const info = OUTPUT_ICONS[type];

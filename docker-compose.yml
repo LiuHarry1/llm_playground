@@ -23,10 +23,8 @@ services:
       context: ./llm_playground_ui
       dockerfile: Dockerfile
       args:
-        # 如果使用 docker-compose，后端服务名可以作为主机名
-        VITE_API_BASE_URL: http://llm-playground-service:8000/api
-        # 或者使用相对路径（如果通过反向代理）
-        # VITE_API_BASE_URL: /api
+        # 使用相对路径，通过 nginx 反向代理到后端
+        VITE_API_BASE_URL: /api
     container_name: llm-playground-ui
     ports:
       - "5173:80"

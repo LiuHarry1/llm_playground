@@ -16,7 +16,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 export async function fetchModels(): Promise<ModelsResponse> {
   const response = await fetch(`${API_BASE}/models/`);
   if (!response.ok) {
-    throw new Error('获取模型列表失败');
+    throw new Error('Failed to fetch model list');
   }
   return response.json();
 }
@@ -31,7 +31,7 @@ export async function searchModels(query: string, category?: string): Promise<{ 
   
   const response = await fetch(`${API_BASE}/models/search?${params}`);
   if (!response.ok) {
-    throw new Error('搜索模型失败');
+    throw new Error('Failed to search models');
   }
   return response.json();
 }
@@ -42,7 +42,7 @@ export async function searchModels(query: string, category?: string): Promise<{ 
 export async function fetchModelInfo(modelId: string): Promise<ModelInfo> {
   const response = await fetch(`${API_BASE}/models/${encodeURIComponent(modelId)}`);
   if (!response.ok) {
-    throw new Error('获取模型信息失败');
+    throw new Error('Failed to fetch model information');
   }
   return response.json();
 }
@@ -60,7 +60,7 @@ export async function uploadFile(file: File): Promise<UploadResponse> {
   });
   
   if (!response.ok) {
-    throw new Error('文件上传失败');
+    throw new Error('File upload failed');
   }
   
   return response.json();
@@ -79,12 +79,12 @@ export async function* chatStream(request: ChatRequest): AsyncGenerator<StreamCh
   });
   
   if (!response.ok) {
-    throw new Error('聊天请求失败');
+    throw new Error('Chat request failed');
   }
   
   const reader = response.body?.getReader();
   if (!reader) {
-    throw new Error('无法读取响应流');
+    throw new Error('Unable to read response stream');
   }
   
   const decoder = new TextDecoder();
@@ -132,7 +132,7 @@ export async function chatComplete(request: ChatRequest): Promise<{
   });
   
   if (!response.ok) {
-    throw new Error('聊天请求失败');
+    throw new Error('Chat request failed');
   }
   
   return response.json();

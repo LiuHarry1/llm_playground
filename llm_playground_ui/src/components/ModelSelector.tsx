@@ -30,25 +30,25 @@ const CATEGORY_INFO: Record<CategoryKey, {
   bgColor: string;
 }> = {
   text: { 
-    label: '文本对话', 
+    label: 'Text Chat', 
     icon: <Cpu className="w-4 h-4" />, 
     color: 'text-accent-blue',
     bgColor: 'bg-accent-blue/10',
   },
   vision: { 
-    label: '视觉理解', 
+    label: 'Vision', 
     icon: <Eye className="w-4 h-4" />, 
     color: 'text-accent-purple',
     bgColor: 'bg-accent-purple/10',
   },
   image_generation: { 
-    label: '图片生成', 
+    label: 'Image Generation', 
     icon: <Image className="w-4 h-4" />, 
     color: 'text-accent-orange',
     bgColor: 'bg-accent-orange/10',
   },
   audio: { 
-    label: '音频处理', 
+    label: 'Audio', 
     icon: <Mic className="w-4 h-4" />, 
     color: 'text-accent-green',
     bgColor: 'bg-accent-green/10',
@@ -83,8 +83,8 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
         onModelChange(defaultModel, getModelCapabilities(defaultModel));
       }
     } catch (error) {
-      console.error('加载模型失败:', error);
-      setError('加载模型列表失败，请刷新页面重试');
+      console.error('Failed to load models:', error);
+      setError('Failed to load model list, please refresh the page and try again');
     } finally {
       setIsLoading(false);
     }
@@ -131,10 +131,10 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
           </div>
           <div className="text-left min-w-0">
             <div className={`text-sm font-medium truncate ${error ? 'text-red-400' : 'text-surface-100'}`}>
-              {isLoading ? '加载中...' : error ? '加载失败' : (selectedModel?.name || '选择模型')}
+              {isLoading ? 'Loading...' : error ? 'Load Failed' : (selectedModel?.name || 'Select Model')}
             </div>
             <div className={`text-xs truncate max-w-[180px] ${error ? 'text-red-400/80' : 'text-surface-400'}`}>
-              {error || selectedModel?.description?.slice(0, 40) || '点击选择一个AI模型'}
+              {error || selectedModel?.description?.slice(0, 40) || 'Click to select an AI model'}
               {selectedModel?.description && selectedModel.description.length > 40 ? '...' : ''}
             </div>
           </div>
@@ -155,7 +155,7 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
             transition={{ duration: 0.2 }}
             className="absolute z-50 top-full left-0 right-0 mt-2 
                        bg-surface-900 border border-surface-700/50 rounded-xl 
-                       shadow-2xl shadow-black/50 overflow-hidden"
+                       overflow-hidden"
           >
             {/* 搜索框 */}
             <div className="p-2 border-b border-surface-700/50">
@@ -165,8 +165,8 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="搜索模型..."
-                  className="w-full pl-9 pr-3 py-2 bg-surface-800/50 border border-surface-700/50
+                  placeholder="Search models..."
+                  className="w-full pl-9 pr-3 py-2 input-field
                             rounded-lg text-sm text-surface-100 placeholder-surface-500
                             focus:outline-none focus:border-accent-blue/50"
                 />
@@ -184,15 +184,15 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
                     <button
                       key={category}
                       onClick={() => setActiveCategory(category)}
-                      className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-2 
+                      className={`flex-1 flex items-center justify-center gap-1 px-2 py-2 
                                  rounded-lg text-xs font-medium transition-all duration-200
                                  ${isActive 
                                    ? `${info.bgColor} ${info.color}` 
                                    : 'text-surface-400 hover:text-surface-200 hover:bg-surface-700/50'
                                  }`}
+                      title={info.label}
                     >
                       {info.icon}
-                      <span className="hidden sm:inline">{info.label}</span>
                       <span className="text-[10px] opacity-60">({count})</span>
                     </button>
                   );
@@ -205,19 +205,19 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
               {error ? (
                 <div className="flex flex-col items-center justify-center py-8 text-red-400">
                   <AlertCircle className="w-8 h-8 mb-2" />
-                  <div className="text-sm mb-3">{error}</div>
+                    <div className="text-sm mb-3">{error}</div>
                   <button
                     onClick={loadModels}
                     className="px-4 py-2 bg-red-500/20 border border-red-500/30 rounded-lg
                              hover:bg-red-500/30 transition-colors text-sm"
                   >
-                    重试
+                    Retry
                   </button>
                 </div>
               ) : isLoading ? (
                 <div className="flex items-center justify-center py-8 text-surface-400">
                   <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                  加载模型列表...
+                  Loading model list...
                 </div>
               ) : filteredModels.length > 0 ? (
                 filteredModels.map((model) => {
@@ -269,7 +269,7 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
                 })
               ) : (
                 <div className="text-center py-8 text-surface-400 text-sm">
-                  {searchQuery ? '未找到匹配的模型' : '暂无可用模型'}
+                  {searchQuery ? 'No matching models found' : 'No available models'}
                 </div>
               )}
             </div>
@@ -277,7 +277,7 @@ export default function ModelSelector({ selectedModel, onModelChange }: ModelSel
             {/* 底部统计 */}
             {!isLoading && (
               <div className="px-3 py-2 border-t border-surface-700/30 text-xs text-surface-500 text-center">
-                共 {allModels.length} 个可用模型
+                {allModels.length} available models
               </div>
             )}
           </motion.div>

@@ -85,7 +85,7 @@ function MessageBubble({ item }: { item: ChatHistoryItem }) {
         <div className={`flex items-center gap-2 mt-2 text-xs text-surface-500
                         ${isUser ? 'justify-end' : 'justify-start'}`}>
           <span>
-            {item.timestamp.toLocaleTimeString('zh-CN', { 
+            {item.timestamp.toLocaleTimeString('en-US', { 
               hour: '2-digit', 
               minute: '2-digit' 
             })}
@@ -99,12 +99,12 @@ function MessageBubble({ item }: { item: ChatHistoryItem }) {
               {copied ? (
                 <>
                   <Check className="w-3 h-3 text-accent-green" />
-                  <span className="text-accent-green">已复制</span>
+                  <span className="text-accent-green">Copied</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3 h-3" />
-                  <span>复制</span>
+                  <span>Copy</span>
                 </>
               )}
             </button>
@@ -147,7 +147,7 @@ function StreamingMessage({ content, images }: { content: string; images: string
           ) : (
             <div className="flex items-center gap-2 text-surface-400">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span className="text-sm">思考中...</span>
+              <span className="text-sm">Thinking...</span>
             </div>
           )}
 
@@ -186,16 +186,16 @@ export default function ChatOutput({
         <div className="text-center space-y-4">
           <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br 
                          from-accent-blue/20 to-accent-purple/20 
-                         border border-accent-blue/30
+                         border dark:border-accent-blue/30 light:border-accent-blue/30
                          flex items-center justify-center">
-            <Bot className="w-10 h-10 text-accent-blue" />
+            <Bot className="w-10 h-10 dark:text-accent-purple light:text-accent-blue" />
           </div>
           <div>
             <h3 className="text-lg font-medium text-surface-100 mb-1">
-              开始对话
+              Start Conversation
             </h3>
             <p className="text-sm text-surface-400 max-w-sm">
-              选择一个模型，输入文字或上传媒体文件开始与AI对话
+              Select a model, enter text or upload media files to start a conversation with AI
             </p>
           </div>
         </div>

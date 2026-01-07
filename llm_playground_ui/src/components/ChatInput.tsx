@@ -64,7 +64,7 @@ export default function ChatInput({
         // 检查文件类型
         const fileType = file.type.split('/')[0] as 'image' | 'audio' | 'video';
         if (!capabilities.inputTypes.includes(fileType)) {
-          setUploadError(`当前模型不支持${fileType}类型输入`);
+          setUploadError(`Current model does not support ${fileType} input`);
           continue;
         }
 
@@ -72,7 +72,7 @@ export default function ChatInput({
         const sizeMB = file.size / (1024 * 1024);
         const limit = FILE_SIZE_LIMITS[fileType] || 10;
         if (sizeMB > limit) {
-          setUploadError(`${file.name} 超过大小限制 (${limit}MB)`);
+          setUploadError(`${file.name} exceeds size limit (${limit}MB)`);
           continue;
         }
 
@@ -90,7 +90,7 @@ export default function ChatInput({
         setMediaFiles(prev => [...prev, mediaFile]);
       }
     } catch (error) {
-      setUploadError('文件上传失败，请重试');
+      setUploadError('File upload failed, please try again');
       console.error('Upload error:', error);
     } finally {
       setIsUploading(false);
@@ -176,12 +176,13 @@ export default function ChatInput({
       </AnimatePresence>
 
       {/* 主输入区域 */}
-      <div className="bg-surface-800/50 border border-surface-700/50 rounded-2xl
-                     focus-within:border-accent-blue/50 transition-all duration-300
+      <div className="input-field rounded-2xl
+                     border border-transparent
+                     focus-within:border-transparent transition-all duration-300
                      shadow-lg shadow-black/20">
         {/* 媒体预览 */}
         {mediaFiles.length > 0 && (
-          <div className="p-3 border-b border-surface-700/30">
+          <div className="p-3 border-b border-surface-700/10 dark:border-surface-700/10">
             <MediaPreview 
               files={mediaFiles} 
               onRemove={removeMediaFile}
@@ -200,7 +201,7 @@ export default function ChatInput({
               adjustTextareaHeight();
             }}
             onKeyDown={handleKeyDown}
-            placeholder="输入消息... (Enter 发送, Shift + Enter 换行)"
+            placeholder="Enter message... (Enter to send, Shift + Enter for new line)"
             disabled={disabled || isLoading}
             className="flex-1 bg-transparent text-surface-100 placeholder-surface-500
                       resize-none outline-none min-h-[44px] max-h-[200px]
@@ -233,11 +234,11 @@ export default function ChatInput({
                                rounded-lg text-xs text-surface-300 whitespace-nowrap
                                opacity-0 group-hover:opacity-100 transition-opacity
                                pointer-events-none z-50">
-                  支持: {availableInputTypes.map(t => {
+                  Supports: {availableInputTypes.map(t => {
                     switch(t) {
-                      case 'image': return '图片';
-                      case 'audio': return '音频';
-                      case 'video': return '视频';
+                      case 'image': return 'Image';
+                      case 'audio': return 'Audio';
+                      case 'video': return 'Video';
                       default: return t;
                     }
                   }).join(', ')}
