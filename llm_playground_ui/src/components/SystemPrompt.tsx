@@ -9,24 +9,24 @@ interface SystemPromptProps {
 
 const PRESET_PROMPTS = [
   {
-    name: '通用助手',
-    prompt: '你是一个有帮助的AI助手，能够清晰、准确地回答用户的问题。',
+    name: 'General Assistant',
+    prompt: 'You are a helpful AI assistant that can clearly and accurately answer user questions.',
   },
   {
-    name: '代码专家',
-    prompt: '你是一个专业的编程助手，精通多种编程语言。请提供清晰、高效的代码解决方案，并解释关键概念。',
+    name: 'Code Expert',
+    prompt: 'You are a professional programming assistant proficient in multiple programming languages. Please provide clear and efficient code solutions and explain key concepts.',
   },
   {
-    name: '创意写作',
-    prompt: '你是一个富有创造力的写作助手，擅长生成引人入胜的故事、诗歌和创意内容。请用生动的语言和丰富的想象力来回应。',
+    name: 'Creative Writing',
+    prompt: 'You are a creative writing assistant skilled at generating engaging stories, poetry, and creative content. Please respond with vivid language and rich imagination.',
   },
   {
-    name: '图片描述',
-    prompt: '你是一个专业的图像分析助手。请仔细观察用户提供的图片，并提供详细、准确的描述和分析。',
+    name: 'Image Description',
+    prompt: 'You are a professional image analysis assistant. Please carefully observe the images provided by users and provide detailed and accurate descriptions and analysis.',
   },
   {
-    name: '翻译专家',
-    prompt: '你是一个专业的多语言翻译助手。请准确翻译用户提供的内容，保持原文的语气和风格。',
+    name: 'Translation Expert',
+    prompt: 'You are a professional multilingual translation assistant. Please accurately translate the content provided by users while maintaining the tone and style of the original text.',
   },
 ];
 
@@ -49,9 +49,9 @@ export default function SystemPrompt({ value, onChange }: SystemPromptProps) {
             <MessageSquare className="w-4 h-4 text-white" />
           </div>
           <div className="text-left">
-            <div className="text-sm font-medium text-surface-100">系统提示词</div>
+            <div className="text-sm font-medium text-surface-100">System Prompt</div>
             <div className="text-xs text-surface-400">
-              {value ? `${value.slice(0, 30)}...` : '定义AI助手的角色和行为'}
+              {value ? `${value.slice(0, 30)}...` : 'Define the role and behavior of the AI assistant'}
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function SystemPrompt({ value, onChange }: SystemPromptProps) {
                             rounded-lg transition-colors duration-200"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
-                  选择预设
+                  Select Preset
                 </button>
 
                 <AnimatePresence>
@@ -93,7 +93,7 @@ export default function SystemPrompt({ value, onChange }: SystemPromptProps) {
                       exit={{ opacity: 0, y: -10 }}
                       className="absolute top-full left-0 mt-2 w-64 p-2
                                 bg-surface-900 border border-surface-700/50 rounded-xl
-                                shadow-2xl shadow-black/50 z-50"
+                                z-50"
                     >
                       {PRESET_PROMPTS.map((preset) => (
                         <button
@@ -118,8 +118,8 @@ export default function SystemPrompt({ value, onChange }: SystemPromptProps) {
               <textarea
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                placeholder="输入系统提示词，定义AI助手的角色、行为和约束..."
-                className="w-full h-32 px-4 py-3 bg-surface-900/50 border border-surface-700/50
+                placeholder="Enter system prompt to define the role, behavior, and constraints of the AI assistant..."
+                className="w-full h-32 px-4 py-3 input-field
                           rounded-xl text-sm text-surface-100 placeholder-surface-500
                           focus:outline-none focus:border-accent-purple/50
                           resize-none transition-colors duration-200"
@@ -127,7 +127,7 @@ export default function SystemPrompt({ value, onChange }: SystemPromptProps) {
 
               {/* 字数统计 */}
               <div className="text-right text-xs text-surface-500">
-                {value.length} 字符
+                {value.length} characters
               </div>
             </div>
           </motion.div>

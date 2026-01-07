@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { Settings, Trash2, Zap } from 'lucide-react';
 import ModelSelector from './components/ModelSelector';
 import SystemPrompt from './components/SystemPrompt';
@@ -7,6 +7,8 @@ import HyperParams from './components/HyperParams';
 import ChatInput from './components/ChatInput';
 import ChatOutput from './components/ChatOutput';
 import CapabilityIndicator from './components/CapabilityIndicator';
+import ThemeToggle from './components/ThemeToggle';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { chatStream, chatComplete } from './services/api';
 import type { 
   ModelCapabilities, 
@@ -17,7 +19,6 @@ import type {
   ContentItem,
   ModelInfo
 } from './types';
-import { getModelCapabilities } from './types';
 
 const DEFAULT_HYPER_PARAMS: HyperParamsType = {
   temperature: 0.7,
@@ -34,7 +35,7 @@ export default function App() {
     inputTypes: ['text'],
     outputTypes: ['text'],
   });
-  const [systemPrompt, setSystemPrompt] = useState('你是一个有帮助的AI助手。');
+  const [systemPrompt, setSystemPrompt] = useState('You are a helpful AI assistant.');
   const [hyperParams, setHyperParams] = useState<HyperParamsType>(DEFAULT_HYPER_PARAMS);
   const [showParams, setShowParams] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
@@ -209,7 +210,7 @@ export default function App() {
       const errorMessage: ChatHistoryItem = {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: `错误: ${error instanceof Error ? error.message : '请求失败'}`,
+        content: `Error: ${error instanceof Error ? error.message : 'Request failed'}`,
         timestamp: new Date(),
       };
       setChatHistory(prev => [...prev, errorMessage]);
@@ -226,6 +227,7 @@ export default function App() {
   };
 
   return (
+    <ThemeProvider>
     <div className="min-h-screen bg-surface-950 text-surface-100 flex">
       {/* 背景装饰 */}
       <div className="fixed inset-0 bg-mesh-gradient pointer-events-none" />
@@ -236,22 +238,25 @@ export default function App() {
       <aside className="w-80 flex-shrink-0 border-r border-surface-800/50 
                        bg-surface-900/50 backdrop-blur-xl p-6 space-y-6
                        overflow-y-auto relative z-10">
-        {/* Logo */}
-        <div className="flex items-center gap-3 pb-4 border-b border-surface-800/50">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue via-accent-purple to-accent-magenta
-                         flex items-center justify-center shadow-lg shadow-accent-purple/20">
-            <Zap className="w-5 h-5 text-white" />
+        {/* Logo 和主题切换 */}
+        <div className="flex items-center justify-between pb-4 border-b border-surface-800/50">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue via-accent-purple to-accent-magenta
+                           flex items-center justify-center shadow-lg shadow-accent-purple/20">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold text-surface-50">LLM Playground</h1>
+              <p className="text-xs text-surface-500">Multimodal Experiment Platform</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg font-semibold text-surface-50">LLM Playground</h1>
-            <p className="text-xs text-surface-500">多模态实验平台</p>
-          </div>
+          <ThemeToggle />
         </div>
 
         {/* 模型选择 */}
         <div className="space-y-2">
           <label className="text-xs font-medium text-surface-400 uppercase tracking-wider">
-            模型选择
+            Model Selection
           </label>
           <ModelSelector 
             selectedModel={selectedModel}
@@ -270,7 +275,7 @@ export default function App() {
         {/* 系统提示词 */}
         <div className="space-y-2">
           <label className="text-xs font-medium text-surface-400 uppercase tracking-wider">
-            系统提示词
+            System Prompt
           </label>
           <SystemPrompt 
             value={systemPrompt}
@@ -286,7 +291,7 @@ export default function App() {
                       uppercase tracking-wider hover:text-surface-200 transition-colors"
           >
             <Settings className="w-4 h-4" />
-            超参数设置
+            Hyper Parameters
           </button>
           <AnimatePresence>
             {showParams && (
@@ -306,7 +311,7 @@ export default function App() {
                     text-red-400 hover:bg-red-500/20 transition-colors duration-200"
         >
           <Trash2 className="w-4 h-4" />
-          清空对话
+          Clear Chat
         </button>
       </aside>
 
@@ -330,12 +335,13 @@ export default function App() {
           />
           <div className="mt-3 text-center text-xs text-surface-500">
             {selectedModel 
-              ? '支持拖拽上传文件 • Enter 发送, Shift + Enter 换行'
-              : '请先选择一个模型'
+              ? 'Drag and drop files to upload • Enter to send, Shift + Enter for new line'
+              : 'Please select a model first'
             }
           </div>
         </div>
       </main>
     </div>
+    </ThemeProvider>
   );
 }
